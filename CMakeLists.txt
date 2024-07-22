@@ -18,6 +18,9 @@ add_subdirectory(lib)
 # Add the executable
 add_executable(clsh ${SOURCES})
 
+# Link the math library (without this, it won't compile on freeBSD)
+target_link_libraries(clsh m)
+
 # Link the Lua library
 target_link_libraries(clsh lua_static)
 
