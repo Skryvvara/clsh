@@ -14,14 +14,16 @@ add_subdirectory(lib)
 # Add the executable
 add_executable(clsh ${SOURCES})
 
-# Link the math library (without this, it won't compile on freeBSD)
+# Link the math library (without this, it won't compile on FreeBSD)
 target_link_libraries(clsh m)
 
-# Link the Lua library
+# Link the Lua library (ensure this is available and correctly built)
 target_link_libraries(clsh lua_static)
 
 # Include the Lua headers
 target_include_directories(clsh PRIVATE lua/src)
 
-# Optionally, specify where to install the executable and other files
-#install(TARGETS clsh DESTINATION bin)
+# Conditionally compile getline.c for Windows
+if (WIN32)
+    target_sources(clsh PRIVATE src/getline.c)
+endif()

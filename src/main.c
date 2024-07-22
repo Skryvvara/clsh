@@ -6,6 +6,10 @@
 
 #define EXIT_FAILURE_PARAMETERS 2
 
+#ifdef _WIN32
+ssize_t getline(char **lineptr, size_t *n, FILE *stream);
+#endif
+
 char* read_line(void) {
     char* line = NULL;
     size_t bufsize = 0;
