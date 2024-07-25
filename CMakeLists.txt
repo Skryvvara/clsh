@@ -27,7 +27,7 @@ add_subdirectory(lib)
 # Link the Lua library (ensure this is available and correctly built)
 set(EXTRA_LIBS ${EXTRA_LIBS} lua_static)
 
-target_link_libraries(ch4 PUBLIC ${EXTRA_LIBS})
+target_link_libraries(clsh PUBLIC ${EXTRA_LIBS})
 
 # Include the Lua headers
 target_include_directories(clsh PRIVATE lua/src)
