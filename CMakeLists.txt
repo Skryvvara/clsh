@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
+include(CheckLibraryExists)
+
 # Project name and version
 project(clsh VERSION 1.0)
 
@@ -12,14 +14,20 @@ set(SOURCES
 # Add the executable
 add_executable(clsh ${SOURCES})
 
+CHECK_LIBRARY_EXISTS(m sin "" HAVE_LIB_M)
+
 # Link the math library (without this, it won't compile on FreeBSD)
-target_link_libraries(clsh m)
+if (HAVE_LIB_M)
+    set(EXTRA_LIBS ${EXTRA_LIBS} m)
+endif (HAVE_LIB_M)
 
 # Add subdirectory for libs
 add_subdirectory(lib)
 
 # Link the Lua library (ensure this is available and correctly built)
-target_link_libraries(clsh lua_static)
+set(EXTRA_LIBS ${EXTRA_LIBS} lua_static)
+
+target_link_libraries(ch4 PUBLIC ${EXTRA_LIBS})
 
 # Include the Lua headers
 target_include_directories(clsh PRIVATE lua/src)
