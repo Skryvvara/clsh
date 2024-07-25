@@ -5,6 +5,7 @@ project(clsh VERSION 1.0)
 
 # Add your source files
 set(SOURCES
+    src/getline.c
     src/main.c
 )
 
@@ -22,8 +23,3 @@ target_link_libraries(clsh lua_static)
 
 # Include the Lua headers
 target_include_directories(clsh PRIVATE lua/src)
-
-# Conditionally compile getline.c for Windows
-if (WIN32)
-    target_sources(clsh PRIVATE src/getline.c)
-endif()

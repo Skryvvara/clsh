@@ -4,17 +4,15 @@
 #include "lua.h"
 #include "lualib.h"
 
-#define EXIT_FAILURE_PARAMETERS 2
+#include "getline.h"
 
-#ifdef _WIN32
-ssize_t getline(char **lineptr, size_t *n, FILE *stream);
-#endif
+#define EXIT_FAILURE_PARAMETERS 2
 
 char* read_line(void) {
     char* line = NULL;
     size_t bufsize = 0;
 
-    if (getline(&line, &bufsize, stdin) == -1) {
+    if (get_line(&line, &bufsize, stdin) == -1) {
         if (feof(stdin)) {
             exit(EXIT_SUCCESS);
         } else {

@@ -1,47 +1,53 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
-#include <stdlib.h>
+#include "getline.h"
 
-ssize_t getline(char **lineptr, size_t *n, FILE *stream) {
-    if (lineptr == NULL || n == NULL || stream == NULL) {
+size_t get_line(char **lineptr, size_t *n, FILE *stream) {
+    char *bufptr = NULL;
+    char *p = bufptr;
+    size_t size;
+    int c;
+
+    if (lineptr == NULL) {
         return -1;
     }
+    if (stream == NULL) {
+        return -1;
+    }
+    if (n == NULL) {
+        return -1;
+    }
+    bufptr = *lineptr;
+    size = *n;
 
-    char *buf = *lineptr;
-    size_t size = *n;
-    int c = 0;
-    size_t i = 0;
-
-    if (buf == NULL || size == 0) {
-        size = 128;
-        buf = (char *)malloc(size);
-        if (buf == NULL) {
+    c = fgetc(stream);
+    if (c == EOF) {
+        return -1;
+    }
+    if (bufptr == NULL) {
+        bufptr = malloc(128);
+        if (bufptr == NULL) {
             return -1;
         }
+        size = 128;
     }
-
-    while ((c = fgetc(stream)) != EOF) {
-        if (i >= size - 1) {
-            size *= 2;
-            char *newbuf = (char *)realloc(buf, size);
-            if (newbuf == NULL) {
-                free(buf);
+    p = bufptr;
+    while(c != EOF) {
+        if ((p - bufptr) > (size - 1)) {
+            size = size + 128;
+            bufptr = realloc(bufptr, size);
+            if (bufptr == NULL) {
                 return -1;
             }
-            buf = newbuf;
         }
-        buf[i++] = (char)c;
+        *p++ = c;
         if (c == '\n') {
             break;
         }
+        c = fgetc(stream);
     }
 
-    if (i == 0) {
-        return -1;
-    }
-
-    buf[i] = '\0';
-    *lineptr = buf;
+    *p++ = '\0';
+    *lineptr = bufptr;
     *n = size;
-    return i;
+
+    return p - bufptr - 1;
 }
