@@ -33,35 +33,25 @@ int main(int argc, char* argv[]) {
     luaL_openlibs(L);
 
     if (argc < 2) {
-        printf("No script file provided, reading from STDIN\n");
-
-        while (1) {
-            line = read_line();
-            luaL_dostring(L, line);
-            free(line);
-        }
-
-        /*
-        char* name = argv[0];
-        fprintf(stderr, "usage: %s [file]\n", name);
+        char* cmd = argv[0];
+        fprintf(stderr, "Usage: %s [file]\n", cmd);
         exit(EXIT_FAILURE_PARAMETERS);
-        */
-    } else {
-        char* file_name = argv[1];
+    }
 
-        lua_newtable(L);
-        for(int i = 0; i < argc; i++) {
-            lua_pushnumber(L, i);
-            lua_pushstring(L, argv[i]);
-            lua_settable(L, -3);
-        }
-        lua_setglobal(L, "arg");
+    file_name = argv[1];
 
-        if (luaL_dofile(L, file_name) != LUA_OK) {
-            const char* error = lua_tostring(L, -1);
-            fprintf(stderr, "Error: %s\n", error);
-            lua_pop(L, 1);
-        }
+    lua_newtable(L);
+    for(int i = 0; i < argc; i++) {
+        lua_pushnumber(L, i);
+        lua_pushstring(L, argv[i]);
+        lua_settable(L, -3);
+    }
+    lua_setglobal(L, "arg");
+
+    if (luaL_dofile(L, file_name) != LUA_OK) {
+        const char* error = lua_tostring(L, -1);
+        fprintf(stderr, "Error: %s\n", error);
+        lua_pop(L, 1);
     }
 
     lua_close(L);
