@@ -16,11 +16,6 @@ add_executable(clsh ${SOURCES})
 
 CHECK_LIBRARY_EXISTS(m sin "" HAVE_LIB_M)
 
-# Link the math library (without this, it won't compile on FreeBSD)
-if (HAVE_LIB_M)
-    set(EXTRA_LIBS ${EXTRA_LIBS} m)
-endif (HAVE_LIB_M)
-
 # Add subdirectory for libs
 add_subdirectory(lib)
 

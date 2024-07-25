@@ -68,5 +68,12 @@ set(lua_HEADERS
 # Create a static library target for Lua
 add_library(lua_static STATIC ${lua_SOURCES} ${lua_HEADERS})
 
+# Link the math library (without this, it won't compile on FreeBSD)
+if (HAVE_LIB_M)
+    set(EXTRA_LIBS ${EXTRA_LIBS} m)
+endif (HAVE_LIB_M)
+
+target_link_libraries(lua_static PUBLIC ${EXTRA_LIBS})
+
 # Specify the include directories for Lua
 target_include_directories(lua_static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
